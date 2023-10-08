@@ -7,16 +7,32 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 // Scene
 const scene = new THREE.Scene();
 
-// Camera
-const camera = new THREE.PerspectiveCamera( // 원근카메라
-  75, // 시야갹(field of view)
-  window.innerWidth / window.innerHeight, // aspect ratio
+// Perspective Camera (원근카메라)
+//const camera = new THREE.PerspectiveCamera(
+//  75, // 시야갹(field of view)
+//  window.innerWidth / window.innerHeight, // aspect ratio
+//  0.1, // near
+//  1000 // far
+//);
+//camera.position.z = 5;
+//camera.position.y = 2;
+//camera.position.x = 1;
+
+// Orthographic Camera (직교 카메라, 원근X)
+const camera = new THREE.OrthographicCamera(
+  -(window.innerWidth / window.innerHeight), // left
+  window.innerWidth / window.innerHeight, // right
+  1, // top
+  -1, // bottom
   0.1, // near
   1000 // far
 );
 camera.position.z = 5;
 camera.position.y = 2;
 camera.position.x = 1;
+camera.lookAt(0, 0, 0); // 원점을 향해
+camera.zoom = 0.5;
+camera.updateProjectionMatrix();
 scene.add(camera);
 
 // Mesh
