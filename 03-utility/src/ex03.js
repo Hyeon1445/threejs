@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import Stats from "stats.js";
+import dat from "dat.gui";
 
-// 초당 프레임 수 (Stats, FPS)
+// GUI Control
 
 export default function example() {
   // Renderer
@@ -44,16 +44,20 @@ export default function example() {
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
 
-  const stats = new Stats();
-  document.body.append(stats.domElement);
+  // Dat GUI
+  const gui = new dat.GUI();
+  gui.add(camera.position, "x", -10, 10, 0.01).name("camera-x");
+  gui.add(mesh.position, "y", -5, 5, 0.01).name("mesh-y");
+  gui.add(mesh.position, "z").min(-5).max(5).step(0.01).name("mesh-z");
+  camera.lookAt(mesh.position);
 
   // 그리기
   const clock = new THREE.Clock();
 
   function draw() {
     const time = clock.getElapsedTime();
-    stats.update();
     mesh.rotation.y = time;
+    camera.lookAt(mesh.position);
 
     renderer.render(scene, camera);
     renderer.setAnimationLoop(draw);
