@@ -1,6 +1,7 @@
 import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-// ----- 주제: Geometry 기본
+// Geometry 기본
 
 export default function example() {
   // Renderer
@@ -34,10 +35,15 @@ export default function example() {
   directionalLight.position.z = 2;
   scene.add(directionalLight);
 
+  // Controls
+  const controls = new OrbitControls(camera, renderer.domElement);
+
   // Mesh
-  const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const geometry = new THREE.BoxGeometry(1, 1, 1, 16, 16, 16);
   const material = new THREE.MeshStandardMaterial({
     color: "hotpink",
+    side: THREE.DoubleSide, // 카메라가 mesh 안에 들어갔을 때 면이 보이도록
+    //wireframe: true,
   });
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
