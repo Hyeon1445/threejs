@@ -59,7 +59,7 @@ export default function example() {
   }
 
   // Controls
-  const controls = new DragControls(meshes, camera, renderer.domElement);
+  const controls = new DragControls(meshes, camera, renderer.domElement); // 드래그해서 mesh 각각 옮기기 기능
   controls.addEventListener("drag", (e) => {
     console.log(e.object.name);
   });
