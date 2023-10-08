@@ -36,10 +36,16 @@ export default function example() {
   scene.add(mesh);
 
   // 그리기
+  const clock = new THREE.Clock();
   function draw() {
+    const time = clock.getElapsedTime();
+
     //mesh.rotation.y += 0.1; // 각도는 radian사용
-    mesh.rotation.y += THREE.MathUtils.degToRad(1); // radian을 degree로 변환해주는 utils
-    mesh.position.y += 0.01;
+    //mesh.rotation.y += THREE.MathUtils.degToRad(1); // radian을 degree로 변환해주는 utils
+    mesh.rotation.y = 2 * time; // time을 활용 -> device별 시간차 보정
+
+    //mesh.position.y += 0.01;
+    mesh.position.y = time;
     if (mesh.position.y > 3) mesh.position.y = 0;
     renderer.render(scene, camera);
     //window.requestAnimationFrame(draw);
