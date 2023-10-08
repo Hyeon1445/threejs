@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { FlyControls } from "three/examples/jsm/controls/FlyControls";
+import { DragControls } from "three/examples/jsm/controls/DragControls";
 
-// FlyControls
+// DragControls
 
 export default function example() {
   // Renderer
@@ -36,14 +36,9 @@ export default function example() {
   directionalLight.position.z = 2;
   scene.add(directionalLight);
 
-  // Controls
-  const controls = new FlyControls(camera, renderer.domElement); // w: 앞 / a: 뒤 / s: 왼 / d: 오 / 마우스 위치 따라 회전
-  controls.rollSpeed = 0.05;
-  //controls.movementSpeed = 3;
-  //controls.dragToLook = true;
-
   // Mesh
   const geometry = new THREE.BoxGeometry(1, 1, 1);
+  const meshes = [];
   let mesh;
   let material;
   for (let i = 0; i < 20; i++) {
@@ -58,8 +53,16 @@ export default function example() {
     mesh.position.x = (Math.random() - 0.5) * 5;
     mesh.position.y = (Math.random() - 0.5) * 5;
     mesh.position.z = (Math.random() - 0.5) * 5;
+    mesh.name = `box-${i}`;
     scene.add(mesh);
+    meshes.push(mesh);
   }
+
+  // Controls
+  const controls = new DragControls(meshes, camera, renderer.domElement);
+  controls.addEventListener("drag", (e) => {
+    console.log(e.object.name);
+  });
 
   // 그리기
   const clock = new THREE.Clock();
@@ -67,7 +70,7 @@ export default function example() {
   function draw() {
     const delta = clock.getDelta();
 
-    controls.update(delta); // 필수, delta넣어야함
+    // pointer lock controls는 update없음
     renderer.render(scene, camera);
     renderer.setAnimationLoop(draw);
   }

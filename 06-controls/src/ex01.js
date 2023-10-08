@@ -66,7 +66,6 @@ export default function example() {
     mesh.position.z = (Math.random() - 0.5) * 5;
     scene.add(mesh);
   }
-  scene.add(mesh);
 
   // 그리기
   const clock = new THREE.Clock();
