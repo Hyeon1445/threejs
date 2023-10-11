@@ -52,19 +52,39 @@ export default function example() {
   const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
   const boxMaterial = new THREE.MeshStandardMaterial({ color: "plum" });
   const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+  boxMesh.name = "box";
 
   const torusGeometry = new THREE.TorusGeometry(2, 0.5, 16, 100);
   const torusMaterial = new THREE.MeshStandardMaterial({ color: "lime" });
   const torusMesh = new THREE.Mesh(torusGeometry, torusMaterial);
+  torusMesh.name = "torus";
   scene.add(boxMesh, torusMesh);
 
   const meshes = [boxMesh, torusMesh];
+
+  const raycaster = new THREE.Raycaster();
 
   // 그리기
   const clock = new THREE.Clock();
 
   function draw() {
-    const delta = clock.getDelta();
+    const time = clock.getElapsedTime();
+
+    boxMesh.position.y = Math.sin(time) * 2;
+    torusMesh.position.y = Math.cos(time) * 2;
+    boxMaterial.color.set("plum");
+    torusMaterial.color.set("lime");
+
+    const origin = new THREE.Vector3(0, 0, 100);
+    const direction = new THREE.Vector3(0, 0, -100); // 방향이기때문에 1, -1 / 만약 1이 아닌 수를 쓸 때에는 정규화 필요. direction.normalize()
+    direction.normalize();
+    raycaster.set(origin, direction);
+
+    const intersects = raycaster.intersectObjects(meshes);
+    intersects.forEach((item) => {
+      console.log(item.object.name);
+      item.object.material.color.set("red");
+    });
 
     renderer.render(scene, camera);
     renderer.setAnimationLoop(draw);
