@@ -65,18 +65,20 @@ export default function example() {
 
     boxMesh.position.y = Math.sin(time) * 2;
     torusMesh.position.y = Math.cos(time) * 2;
-    boxMaterial.color.set("plum");
-    torusMaterial.color.set("lime");
+    //boxMaterial.color.set("plum");
+    //torusMaterial.color.set("lime");
 
     renderer.render(scene, camera);
     renderer.setAnimationLoop(draw);
   }
 
   function checkIntersects() {
+    if (mouseMoved) return;
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(meshes);
     for (const item of intersects) {
       console.log(item.object.name);
+      item.object.material.color.set("red");
       break;
     }
   }
@@ -94,6 +96,24 @@ export default function example() {
     mouse.x = (e.clientX / canvas.clientWidth) * 2 - 1;
     mouse.y = -((e.clientY / canvas.clientHeight) * 2 - 1);
     checkIntersects();
+  });
+
+  let mouseMoved;
+  let clickStartX;
+  let clickStartY;
+  let clickStartTime;
+  canvas.addEventListener("mousedown", (e) => {
+    clickStartX = e.clickStartX;
+    clickStartY = e.clickStartY;
+    clickStartTime = Date.now();
+  });
+
+  canvas.addEventListener("mouseup", (e) => {
+    const xGap = Math.abs(e.clickStartX - clickStartX);
+    const yGap = Math.abs(e.clickStartY - clickStartY);
+    const timeGap = Date.now() - clickStartTime;
+
+    mouseMoved = xGap > 5 || yGap > 5 || timeGap > 500;
   });
 
   draw();
