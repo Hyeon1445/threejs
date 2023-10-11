@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { PreventDragClick } from "./PreventDragClick";
 
 // 클릭한 mesh 감지하기
 
@@ -73,7 +74,7 @@ export default function example() {
   }
 
   function checkIntersects() {
-    if (mouseMoved) return;
+    if (preventDragClick.mouseMoved) return;
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(meshes);
     for (const item of intersects) {
@@ -98,23 +99,7 @@ export default function example() {
     checkIntersects();
   });
 
-  let mouseMoved;
-  let clickStartX;
-  let clickStartY;
-  let clickStartTime;
-  canvas.addEventListener("mousedown", (e) => {
-    clickStartX = e.clickStartX;
-    clickStartY = e.clickStartY;
-    clickStartTime = Date.now();
-  });
-
-  canvas.addEventListener("mouseup", (e) => {
-    const xGap = Math.abs(e.clickStartX - clickStartX);
-    const yGap = Math.abs(e.clickStartY - clickStartY);
-    const timeGap = Date.now() - clickStartTime;
-
-    mouseMoved = xGap > 5 || yGap > 5 || timeGap > 500;
-  });
+  const preventDragClick = new PreventDragClick(canvas);
 
   draw();
 }
